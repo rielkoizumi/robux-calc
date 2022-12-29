@@ -16,7 +16,7 @@ const App = () => {
   const [price, setPrice] = useState('');
   const [rate, setRate] = useState('');
   const [type, setType] = useState('ct');
-  const [currency, setCurrency] = useState('$');
+  const [currency, setCurrency] = useState('USD');
   const [msgResult, setResult] = useState({price: 1428, receive: 1000});
   const [payment, setPayment] = useState('');
 
@@ -34,12 +34,13 @@ const App = () => {
       num: event.target[0].value,
       price: event.target[1].value,
       rate: event.target[2].value,
-      type: event.target[3].value
+      type: event.target[3].value,
+      currency: event.target[4].value
     }
     let result = await axios.get(`https://rielbot.app/api/calc/robux`, {params});
     setResult(result.data.result);
     if(result.data.result.payment){
-      setPayment(`You pay: ${currency}${ths(result.data.result.payment)}`);
+      setPayment(`You pay: ${currency} ${ths(result.data.result.payment)}`);
     } else {
       setPayment(``);
     }
@@ -73,8 +74,8 @@ const App = () => {
               <Form.Group className='mb-3' controlId='currency'>
                 <Form.Label>Currency</Form.Label>
                 <Form.Select value={currency} onChange={event => setCurrency(event.target.value)}>
-                  <option value='$'>USD</option>
-                  <option value='₱'>PHP</option>
+                  <option value='USD'>USD ($)</option>
+                  <option value='PHP'>PHP (₱)</option>
                 </Form.Select>
               </Form.Group>
 
