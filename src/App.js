@@ -40,7 +40,12 @@ const App = () => {
     let result = await axios.get(`https://rielbot.app/api/calc/robux`, {params});
     setResult(result.data.result);
     if(result.data.result.payment){
-      setPayment(`You pay: ${currency} ${ths(result.data.result.payment)}`);
+      let fixed = `${currency} ${ths(result.data.result.payment)}`;
+      let regex = /\.([1-9])/gm;
+      if (regex.test(result.data.result.payment) && currency == "PHP"){
+        fixed = `${currency} ${ths(parseFloat(result.data.result.payment).toFixed(0))} ( ${currency} ${ths(result.data.result.payment)} )`
+      }
+      setPayment(`You pay: ${fixed}`);
     } else {
       setPayment(``);
     }
@@ -51,9 +56,11 @@ const App = () => {
     <div className="App">
         <div className="App-header">
           <Container>
+            <h1>Bloxriel - <span className='green'>Robux</span> Calculator</h1>
+            <p>Calculates covered and non-covered tax and estimates how much it costs in different currency of your choice.</p>
             <Form onSubmit={handleSubmit}>
             <Form.Group className='mb-3' controlId='robux'>
-                <Form.Label>Robux</Form.Label>
+                <Form.Label>Robux <img src='robux_gold.svg'/></Form.Label>
                 <Form.Control type="number" placeholder="Enter robux" value={robux} min="50" max="999999999" onChange={event => setRobux(event.target.value)} required />
               </Form.Group>
               <Form.Group className='mb-3' controlId='price'>
@@ -78,7 +85,7 @@ const App = () => {
                   <option value='PHP'>PHP (₱)</option>
                 </Form.Select>
               </Form.Group>
-
+              <p>Buying through gamepass/shirt usually takes 3-7 days</p>
               <Button variant="primary" type="submit">
                 Submit
               </Button><br/>
